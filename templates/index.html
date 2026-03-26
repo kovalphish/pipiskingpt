@@ -3,193 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIPISKAgpt — Crystal Clear AI</title>
+    <title>PIPISKAgpt — Crystal AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text: #ffffff;
-            --accent: #00d2ff;
+            /* Палитра Deep Ocean */
+            --bg: #0a0a0f;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #4ade80; /* Мятно-зеленый для свежести */
+            --glow: rgba(74, 222, 128, 0.15);
+            --text: #f4f4f5;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Geist', sans-serif;
         }
 
         body {
-            background: radial-gradient(circle at top left, #1a1a2e, #16213e);
+            background-color: var(--bg);
+            /* Сложный градиент для объема стекла */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(76, 29, 149, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(13, 148, 136, 0.15) 0px, transparent 50%);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
+            padding: 20px;
         }
 
-        /* Эффект жидкого стекла */
-        .liquid-glass {
+        .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(12px) saturate(180%);
-            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border-radius: 40px; /* Экстремальное закругление */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .navbar {
-            width: 90%;
-            max-width: 800px;
-            margin-top: 20px;
-            padding: 15px 25px;
+        .nav {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
+            margin-bottom: 60px;
         }
 
         .logo {
             font-weight: 800;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
+            font-size: 1rem;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            text-transform: uppercase;
+            gap: 10px;
+            color: var(--accent);
         }
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 25px;
         }
 
         .nav-links a {
             color: var(--text);
             text-decoration: none;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0.5;
             transition: 0.3s;
         }
 
         .nav-links a:hover {
             opacity: 1;
-            color: var(--accent);
         }
 
         .hero {
-            margin-top: 100px;
             text-align: center;
-            max-width: 600px;
-            padding: 40px;
+            padding: 60px 40px;
+            max-width: 700px;
+            margin-bottom: 40px;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            background: linear-gradient(to right, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            line-height: 1;
         }
 
         .hero p {
-            opacity: 0.6;
-            margin-bottom: 30px;
-            line-height: 1.6;
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #a1a1aa;
+            margin-bottom: 40px;
         }
 
-        .btn-main {
-            padding: 12px 30px;
-            background: var(--accent);
-            color: #000;
+        .btn {
+            background: var(--text);
+            color: var(--bg);
+            padding: 16px 35px;
+            border-radius: 100px; /* Полный овал */
             text-decoration: none;
-            border-radius: 12px;
-            font-weight: 700;
-            transition: 0.3s;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .btn-main:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            width: 90%;
-            max-width: 800px;
-            margin-top: 50px;
-        }
-
-        .feature-card {
-            padding: 20px;
-            text-align: center;
+            gap: 12px;
             transition: 0.3s;
         }
 
-        .feature-card i {
-            margin-bottom: 10px;
+        .btn:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--glow);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .card {
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .card i {
             color: var(--accent);
+            margin-bottom: 15px;
+            opacity: 0.8;
         }
 
-        .feature-card h3 {
-            font-size: 1rem;
-            margin-bottom: 5px;
+        .card h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
-        .feature-card p {
-            font-size: 0.8rem;
-            opacity: 0.5;
+        .card p {
+            font-size: 0.75rem;
+            color: #71717a;
+        }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar liquid-glass">
+    <nav class="nav glass-card">
         <div class="logo">
-            <i data-lucide="zap"></i> PIPISKAgpt
+            <i data-lucide="sparkles" size="20"></i> PIPISKAgpt
         </div>
         <div class="nav-links">
-            <a href="/chat">Чат</a>
-            <a href="/feedback">Отзывы</a>
-            <a href="/dashboard"><i data-lucide="user" size="18"></i></a>
+            <a href="/chat">Chat</a>
+            <a href="/feedback">Feed</a>
+            <a href="/dashboard"><i data-lucide="circle-user-round" size="20"></i></a>
         </div>
     </nav>
 
-    <div class="hero liquid-glass">
-        <h1>PIPISKAgpt</h1>
-        <p>Чистый интеллект в прозрачной оболочке. <br> Работает на базе MiniMax M2.5 с мгновенным откликом.</p>
-        <a href="/chat" class="btn-main">
-            Начать <i data-lucide="arrow-right" size="18"></i>
+    <div class="hero glass-card">
+        <h1>Pure. Fluid. AI.</h1>
+        <p>Минималистичный доступ к MiniMax M2.5. <br> Ничего лишнего, только интеллект.</p>
+        <a href="/chat" class="btn">
+            Запустить чат <i data-lucide="arrow-up-right" size="20"></i>
         </a>
     </div>
 
-    <div class="features">
-        <div class="feature-card liquid-glass">
-            <i data-lucide="cpu"></i>
-            <h3>M2.5 Core</h3>
-            <p>197K контекста</p>
+    <div class="grid">
+        <div class="card glass-card">
+            <i data-lucide="zap"></i>
+            <h3>Speed</h3>
+            <p>Мгновенный отклик</p>
         </div>
-        <div class="feature-card liquid-glass">
-            <i data-lucide="shield-check"></i>
-            <h3>Safe AI</h3>
-            <p>Конфиденциально</p>
+        <div class="card glass-card">
+            <i data-lucide="box"></i>
+            <h3>Context</h3>
+            <p>197K токенов</p>
         </div>
-        <div class="feature-card liquid-glass">
-            <i data-lucide="layers"></i>
-            <h3>Fallback</h3>
-            <p>Всегда онлайн</p>
+        <div class="card glass-card">
+            <i data-lucide="fingerprint"></i>
+            <h3>Private</h3>
+            <p>Без логов</p>
         </div>
     </div>
 
     <script>
-        // Активация иконок
         lucide.createIcons();
     </script>
 </body>
