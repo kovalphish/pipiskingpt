@@ -127,7 +127,7 @@
         }
 
         .message {
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             display: flex;
         }
 
@@ -141,9 +141,11 @@
 
         .message-content {
             max-width: 70%;
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 1rem;
             white-space: pre-wrap;
+            font-size: 0.875rem;
+            line-height: 1.4;
         }
 
         .user .message-content {
@@ -158,8 +160,8 @@
         }
 
         .message-info {
-            font-size: 0.7rem;
-            margin-top: 0.25rem;
+            font-size: 0.65rem;
+            margin-top: 0.2rem;
             color: var(--text-light);
         }
 
@@ -208,18 +210,37 @@
             cursor: not-allowed;
         }
 
+        .clear-btn {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            z-index: 100;
+        }
+
+        .clear-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
         .typing-indicator {
             display: flex;
             gap: 4px;
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 0.75rem;
             background: var(--assistant-bg);
             border-radius: 1rem;
             width: fit-content;
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: var(--text-light);
             border-radius: 50%;
             animation: typing 1.4s infinite;
@@ -227,22 +248,22 @@
 
         @keyframes typing {
             0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-8px); }
+            30% { transform: translateY(-6px); }
         }
 
         .empty {
             text-align: center;
-            padding: 3rem;
+            padding: 2rem;
             color: var(--text-light);
+            font-size: 0.875rem;
         }
 
         @media (max-width: 768px) {
             .message-content {
                 max-width: 85%;
             }
-            .theme-toggle {
-                top: 0.5rem;
-                right: 0.5rem;
+            .clear-btn {
+                bottom: 5rem;
             }
         }
     </style>
@@ -252,6 +273,8 @@
         <button class="theme-btn" onclick="setTheme('light')">Светлая</button>
         <button class="theme-btn" onclick="setTheme('dark')">Темная</button>
     </div>
+
+    <button class="clear-btn" onclick="clearChat()">Очистить чат</button>
 
     <div class="header">
         <h1>DeepSeek Chat</h1>
@@ -266,8 +289,7 @@
     <div class="chat-container">
         <div class="messages" id="messages">
             <div class="empty">
-                <p>Напишите сообщение, чтобы начать диалог</p>
-                <p style="font-size: 0.875rem; margin-top: 0.5rem;">Модель: MiniMax M2.5 (с автоматическим fallback)</p>
+                💬 Напишите сообщение, чтобы начать диалог
             </div>
         </div>
 
@@ -325,6 +347,10 @@
             scrollToBottom();
         }
 
+        function clearChat() {
+            messagesDiv.innerHTML = '<div class="empty">💬 Чат очищен. Напишите что-нибудь!</div>';
+        }
+
         function showTyping() {
             const indicator = document.createElement('div');
             indicator.className = 'message assistant';
@@ -372,7 +398,7 @@
                 addMessage('assistant', data.response || 'Ошибка');
             } catch (e) {
                 removeTyping();
-                addMessage('assistant', 'Ошибка соединения');
+                addMessage('assistant', '❌ Ошибка соединения');
             } finally {
                 isWaiting = false;
                 sendBtn.disabled = false;
