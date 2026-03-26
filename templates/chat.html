@@ -8,54 +8,46 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #050508; --glass: rgba(255, 255, 255, 0.03); --accent: #4ade80; --text: #f4f4f5; }
+        [data-theme="light"] { --bg: #f5f5f7; --glass: rgba(0, 0, 0, 0.03); --text: #1a1a1e; --accent: #10b981; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Geist', sans-serif; }
-        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px 20px; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px 20px; transition: 0.3s; }
         
-        .glass { background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); border-radius: 35px; }
+        nav { width: 100%; max-width: 850px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: var(--glass); backdrop-filter: blur(20px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); }
+        nav a { color: var(--text); text-decoration: none; font-size: 0.85rem; opacity: 0.5; }
         
-        /* Навигация (Добавлена) */
-        nav { width: 100%; max-width: 800px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        nav a { color: var(--text); text-decoration: none; font-size: 0.85rem; opacity: 0.5; transition: 0.3s; }
-        nav a:hover { opacity: 1; color: var(--accent); }
+        .chat-wrap { width: 100%; max-width: 850px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scrollbar-width: none; }
+        
+        .msg { max-width: 80%; padding: 14px 22px; border-radius: 28px; font-size: 0.95rem; line-height: 1.5; }
+        .user { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 4px; }
+        .ai { align-self: flex-start; background: var(--glass); border: 1px solid rgba(255,255,255,0.08); border-bottom-left-radius: 4px; }
 
-        .chat-container { width: 100%; max-width: 800px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .messages-area { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 15px; scrollbar-width: none; }
+        .input-box { display: flex; gap: 12px; padding: 10px 10px 10px 25px; background: var(--glass); border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
+        /* Исправлен цвет текста */
+        input { flex: 1; background: transparent; border: none; color: var(--text); outline: none; font-size: 1rem; }
+        .send { background: var(--text); color: var(--bg); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        .msg { max-width: 85%; padding: 14px 22px; border-radius: 28px; line-height: 1.5; font-size: 0.95rem; }
-        .user { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
-        .ai { align-self: flex-start; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 4px; }
-
-        .input-area { display: flex; gap: 12px; padding: 10px 10px 10px 25px; background: var(--glass); border-radius: 100px; margin-bottom: 10px; }
-        
-        /* Фикс черного текста */
-        input { flex: 1; background: transparent; border: none; color: #ffffff; outline: none; font-size: 1rem; }
-        input::placeholder { color: rgba(255,255,255,0.3); }
-        
-        .send-btn { background: var(--text); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .send-btn:disabled { opacity: 0.3; }
-
-        .status-info { font-size: 0.75rem; color: var(--accent); margin-left: 25px; height: 20px; opacity: 0.7; }
+        .typing { font-size: 0.8rem; color: var(--accent); margin-left: 25px; height: 20px; }
     </style>
 </head>
 <body>
-    <nav class="glass">
+    <nav>
         <div style="font-weight: 800; color: var(--accent);">PIPISKAgpt</div>
-        <div style="display: flex; gap: 20px;">
+        <div style="display: flex; gap: 15px;">
             <a href="/">Главная</a>
             <a href="/feedback">Отзывы</a>
+            <a href="/dashboard">Профиль</a>
         </div>
     </nav>
 
-    <div class="chat-container">
-        <div class="messages-area" id="chat">
-            <div class="msg ai">Привет! Я готов к работе. О чем сегодня поговорим?</div>
+    <div class="chat-wrap">
+        <div class="messages" id="chat">
+            <div class="msg ai">Привет! Напиши что-нибудь, и я отвечу.</div>
         </div>
-        <div id="status" class="status-info"></div>
-        <div class="input-area glass">
-            <input type="text" id="userInput" placeholder="Напишите ваш вопрос..." onkeypress="if(event.key==='Enter') sendMessage()">
-            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                <i data-lucide="arrow-up" size="20" color="#000"></i>
-            </button>
+        <div id="status" class="typing"></div>
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="Спроси меня о чем угодно..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send" id="sendBtn" onclick="sendMessage()"><i data-lucide="arrow-up" size="20"></i></button>
         </div>
     </div>
 
@@ -66,22 +58,12 @@
         const status = document.getElementById('status');
         let isWaiting = false;
 
-        function addMessage(role, text) {
-            const m = document.createElement('div');
-            m.className = `msg ${role === 'user' ? 'user' : 'ai'}`;
-            m.innerText = text;
-            chatDiv.appendChild(m);
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-            return m;
-        }
-
-        // Эффект плавного написания текста
-        async function typeMessage(element, text) {
-            element.innerText = '';
-            for (let i = 0; i < text.length; i++) {
-                element.innerText += text.charAt(i);
+        async function typeMessage(el, text) {
+            el.innerText = '';
+            for (let char of text) {
+                el.innerText += char;
                 chatDiv.scrollTop = chatDiv.scrollHeight;
-                await new Promise(r => setTimeout(r, 15)); // Скорость печати
+                await new Promise(r => setTimeout(r, 15));
             }
         }
 
@@ -89,10 +71,14 @@
             const msg = input.value.trim();
             if (!msg || isWaiting) return;
 
-            addMessage('user', msg);
+            const uMsg = document.createElement('div');
+            uMsg.className = 'msg user';
+            uMsg.innerText = msg;
+            chatDiv.appendChild(uMsg);
+            
             input.value = '';
             isWaiting = true;
-            status.innerText = 'Нейронка генерирует ответ...';
+            status.innerText = 'Печатает...';
 
             try {
                 const res = await fetch('/api/chat', {
@@ -103,15 +89,17 @@
                 const data = await res.json();
                 status.innerText = '';
                 
-                const aiMsg = addMessage('ai', ''); 
-                await typeMessage(aiMsg, data.response || 'Произошла ошибка.');
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'msg ai';
+                chatDiv.appendChild(aiMsg);
+                await typeMessage(aiMsg, data.response || 'Ошибка');
             } catch (e) {
-                status.innerText = '';
-                addMessage('ai', 'Ошибка сети.');
+                status.innerText = 'Ошибка соединения';
             } finally {
                 isWaiting = false;
             }
         }
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
     </script>
 </body>
 </html>
