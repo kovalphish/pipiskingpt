@@ -18,9 +18,37 @@
         .chat-wrap { width: 100%; max-width: 850px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scrollbar-width: none; }
         
-        .msg { max-width: 80%; padding: 14px 22px; border-radius: 28px; font-size: 0.95rem; line-height: 1.5; }
-        .user { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 4px; }
-        .ai { align-self: flex-start; background: var(--glass); border: 1px solid rgba(255,255,255,0.08); border-bottom-left-radius: 4px; }
+        .msg { 
+            max-width: 85%; 
+            padding: 14px 22px; 
+            border-radius: 28px; 
+            line-height: 1.5; 
+            font-size: 0.95rem; 
+            /* ФИКСЫ ТУТ: */
+            word-wrap: break-word;       /* Разрывать длинные слова */
+            overflow-wrap: break-word;   /* Дополнительная поддержка переноса */
+            white-space: pre-wrap;       /* Сохранять переносы строк, но переносить текст по ширине */
+            display: inline-block;       /* Чтобы блок подстраивался под контент правильно */
+        }
+        
+        .ai { 
+            align-self: flex-start; 
+            background: var(--glass); 
+            border: 1px solid rgba(255,255,255,0.08); 
+            border-bottom-left-radius: 4px;
+            width: fit-content;          /* Чтобы блок не растягивался на всю ширину зря */
+        }
+        
+        /* Фикс для инпута, чтобы текст был белым и не слипался */
+        input { 
+            flex: 1; 
+            background: transparent; 
+            border: none; 
+            color: #ffffff !important;   /* Принудительно белый текст */
+            outline: none; 
+            font-size: 1rem;
+            padding-right: 10px;
+        }
 
         .input-box { display: flex; gap: 12px; padding: 10px 10px 10px 25px; background: var(--glass); border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
         /* Исправлен цвет текста */
@@ -35,7 +63,7 @@
         <div style="font-weight: 800; color: var(--accent);">PIPISKAgpt</div>
         <div style="display: flex; gap: 15px;">
             <a href="/">Главная</a>
-            <a href="/feedback">Отзывы</a>
+            <a href="/feedback">ОтзыTTвы</a>
             <a href="/dashboard">Профиль</a>
         </div>
     </nav>
