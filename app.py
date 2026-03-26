@@ -8,6 +8,10 @@ app = Flask(__name__)
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
+# Telegram Bot (для обратной связи)
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
+
 # Модели с fallback
 FALLBACK_MODELS = [
     {"id": "minimax/minimax-m2.5:free", "name": "MiniMax M2.5"},
@@ -49,12 +53,39 @@ def get_ai_response(message):
     
     return "❌ Все модели временно недоступны. Попробуйте позже."
 
+def send_to_telegram(name, email, message, rating):
+    """Отправить отзыв в Telegram"""
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        return False
+    
+    text = f"📝 НОВЫЙ ОТЗЫВ\n\n"
+    text += f"👤 Имя: {name}\n"
+    text += f"📧 Email: {email}\n"
+    text += f"⭐ Оценка: {'★' * rating}{'☆' * (5 - rating)}\n"
+    text += f"💬 Сообщение:\n{message}"
+    
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        data = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
+        response = requests.post(url, data=data, timeout=10)
+        return response.status_code == 200
+    except Exception:
+        return False
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/api/chat', methods=['POST'])
+@app.route('/chat')
 def chat():
+    return render_template('chat.html')
+
+@app.route('/feedback')
+def feedback_page():
+    return render_template('feedback.html')
+
+@app.route('/api/chat', methods=['POST'])
+def chat_api():
     data = request.json
     message = data.get('message', '')
     
@@ -63,6 +94,24 @@ def chat():
     
     response = get_ai_response(message)
     return jsonify({'response': response})
+
+@app.route('/api/feedback', methods=['POST'])
+def feedback_api():
+    data = request.json
+    name = data.get('name', '')
+    email = data.get('email', '')
+    message = data.get('message', '')
+    rating = int(data.get('rating', 5))
+    
+    if not name or not email or not message:
+        return jsonify({'error': 'Заполните все поля'}), 400
+    
+    success = send_to_telegram(name, email, message, rating)
+    
+    if success:
+        return jsonify({'success': True, 'message': 'Спасибо за отзыв!'})
+    else:
+        return jsonify({'error': 'Ошибка отправки. Попробуйте позже.'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

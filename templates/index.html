@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek Chat</title>
+    <title>DeepSeek - Бесплатный AI чат</title>
     <style>
         * {
             margin: 0;
@@ -19,8 +19,6 @@
             --border: #e0e0e0;
             --accent: #0d6efd;
             --accent-hover: #0b5ed7;
-            --user-bg: #0d6efd;
-            --assistant-bg: #e9ecef;
         }
 
         [data-theme="dark"] {
@@ -30,20 +28,16 @@
             --text-light: #adb5bd;
             --border: #404040;
             --accent: #3b82f6;
-            --assistant-bg: #404040;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            min-height: 100vh;
             transition: all 0.3s;
         }
 
-        /* Header */
         .header {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -56,13 +50,23 @@
             font-weight: 600;
         }
 
-        .model-badge {
-            font-size: 0.75rem;
-            color: var(--text-light);
-            margin-top: 0.25rem;
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
         }
 
-        /* Theme Toggle */
+        .nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+        }
+
         .theme-toggle {
             position: fixed;
             top: 1rem;
@@ -90,143 +94,66 @@
             color: white;
         }
 
-        /* Chat */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        .container {
             max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 1rem;
-            overflow: hidden;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            text-align: center;
         }
 
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
+        .hero h1 {
+            font-size: 2.5rem;
             margin-bottom: 1rem;
         }
 
-        .message {
-            margin-bottom: 1rem;
-            display: flex;
-        }
-
-        .user {
-            justify-content: flex-end;
-        }
-
-        .assistant {
-            justify-content: flex-start;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            white-space: pre-wrap;
-        }
-
-        .user .message-content {
-            background: var(--user-bg);
-            color: white;
-            border-bottom-right-radius: 0.25rem;
-        }
-
-        .assistant .message-content {
-            background: var(--assistant-bg);
-            border-bottom-left-radius: 0.25rem;
-        }
-
-        .message-info {
-            font-size: 0.7rem;
-            margin-top: 0.25rem;
+        .hero p {
             color: var(--text-light);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
         }
 
-        .user .message-info {
-            text-align: right;
-        }
-
-        /* Input */
-        .input-area {
-            display: flex;
-            gap: 0.75rem;
-            padding: 1rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            background: var(--bg);
-            color: var(--text);
-            resize: none;
-            font-family: inherit;
-        }
-
-        .chat-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .send-btn {
+        .btn {
+            display: inline-block;
             padding: 0.75rem 1.5rem;
             background: var(--accent);
             color: white;
-            border: none;
+            text-decoration: none;
             border-radius: 0.5rem;
-            cursor: pointer;
             font-weight: 500;
+            transition: background 0.2s;
         }
 
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .btn:hover {
+            background: var(--accent-hover);
         }
 
-        /* Typing */
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            padding: 0.75rem 1rem;
-            background: var(--assistant-bg);
-            border-radius: 1rem;
-            width: fit-content;
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
         }
 
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--text-light);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
+        .feature {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
         }
 
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-8px); }
+        .feature h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .empty {
-            text-align: center;
-            padding: 3rem;
+        .feature p {
+            font-size: 0.875rem;
             color: var(--text-light);
         }
 
         @media (max-width: 768px) {
-            .message-content {
-                max-width: 85%;
+            .hero h1 {
+                font-size: 1.75rem;
             }
             .theme-toggle {
                 top: 0.5rem;
@@ -243,29 +170,37 @@
 
     <div class="header">
         <h1>DeepSeek Chat</h1>
-        <div class="model-badge">MiniMax M2.5 — лучшая бесплатная модель</div>
+        <div class="nav">
+            <a href="/" style="color: var(--accent);">Главная</a>
+            <a href="/chat">Чат</a>
+            <a href="/feedback">Отзывы</a>
+        </div>
     </div>
 
-    <div class="chat-container">
-        <div class="messages" id="messages">
-            <div class="empty">
-                <p>Напишите сообщение, чтобы начать диалог</p>
-                <p style="font-size: 0.875rem; margin-top: 0.5rem;">Модель: MiniMax M2.5 (с автоматическим fallback)</p>
-            </div>
+    <div class="container">
+        <div class="hero">
+            <h1>DeepSeek</h1>
+            <p>Бесплатный AI-ассистент на базе MiniMax M2.5</p>
+            <a href="/chat" class="btn">Начать общение</a>
         </div>
 
-        <div class="input-area">
-            <textarea id="input" class="chat-input" rows="2" placeholder="Введите сообщение... (Enter - отправить)" onkeydown="handleKeyDown(event)"></textarea>
-            <button id="sendBtn" class="send-btn" onclick="sendMessage()">Отправить</button>
+        <div class="features">
+            <div class="feature">
+                <h3>MiniMax M2.5</h3>
+                <p>Лучшая бесплатная модель, 197K контекста</p>
+            </div>
+            <div class="feature">
+                <h3>Авто fallback</h3>
+                <p>При недоступности — резервные модели</p>
+            </div>
+            <div class="feature">
+                <h3>Светлая/темная тема</h3>
+                <p>Комфорт в любое время суток</p>
+            </div>
         </div>
     </div>
 
     <script>
-        let isWaiting = false;
-        const messagesDiv = document.getElementById('messages');
-        const input = document.getElementById('input');
-        const sendBtn = document.getElementById('sendBtn');
-
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
@@ -279,91 +214,6 @@
         }
 
         setTheme(localStorage.getItem('theme') || 'light');
-
-        function handleKeyDown(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        }
-
-        function scrollToBottom() {
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        function addMessage(role, content) {
-            if (messagesDiv.querySelector('.empty')) {
-                messagesDiv.innerHTML = '';
-            }
-            
-            const div = document.createElement('div');
-            div.className = `message ${role}`;
-            div.innerHTML = `
-                <div class="message-content">
-                    ${escapeHtml(content)}
-                    <div class="message-info">${new Date().toLocaleTimeString()}</div>
-                </div>
-            `;
-            messagesDiv.appendChild(div);
-            scrollToBottom();
-        }
-
-        function showTyping() {
-            const indicator = document.createElement('div');
-            indicator.className = 'message assistant';
-            indicator.id = 'typing';
-            indicator.innerHTML = `
-                <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-            messagesDiv.appendChild(indicator);
-            scrollToBottom();
-        }
-
-        function removeTyping() {
-            const indicator = document.getElementById('typing');
-            if (indicator) indicator.remove();
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        async function sendMessage() {
-            const msg = input.value.trim();
-            if (!msg || isWaiting) return;
-
-            addMessage('user', msg);
-            input.value = '';
-            isWaiting = true;
-            sendBtn.disabled = true;
-            showTyping();
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: msg })
-                });
-                const data = await res.json();
-                removeTyping();
-                addMessage('assistant', data.response || 'Ошибка');
-            } catch (e) {
-                removeTyping();
-                addMessage('assistant', 'Ошибка соединения');
-            } finally {
-                isWaiting = false;
-                sendBtn.disabled = false;
-                input.focus();
-            }
-        }
-
-        input.focus();
     </script>
 </body>
 </html>

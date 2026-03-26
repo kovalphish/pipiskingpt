@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отзывы - DeepSeek</title>
+    <title>Обратная связь - DeepSeek</title>
     <style>
         * {
             margin: 0;
@@ -12,98 +12,72 @@
         }
 
         :root {
-            --bg-color: #f8f9fa;
-            --surface-color: #ffffff;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --border-color: #dee2e6;
+            --bg: #f5f5f5;
+            --surface: white;
+            --text: #1a1a2e;
+            --text-light: #666;
+            --border: #e0e0e0;
             --accent: #0d6efd;
             --accent-hover: #0b5ed7;
-            --shadow: 0 1px 3px rgba(0,0,0,0.05);
+            --success: #10b981;
+            --error: #ef4444;
         }
 
         [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --surface-color: #2d2d2d;
-            --text-primary: #e9ecef;
-            --text-secondary: #adb5bd;
-            --border-color: #404040;
+            --bg: #1a1a1a;
+            --surface: #2d2d2d;
+            --text: #e9ecef;
+            --text-light: #adb5bd;
+            --border: #404040;
             --accent: #3b82f6;
-            --accent-hover: #60a5fa;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            transition: all 0.3s;
         }
 
-        .navbar {
-            border-bottom: 1px solid var(--border-color);
-            background-color: var(--surface-color);
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            text-align: center;
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo {
+        .header h1 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: var(--text-primary);
-            text-decoration: none;
         }
 
-        .nav-links {
+        .nav {
             display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
         }
 
-        .nav-links a {
-            color: var(--text-secondary);
+        .nav a {
+            color: var(--text-light);
             text-decoration: none;
-            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
         }
 
-        .nav-links a:hover {
+        .nav a:hover {
             color: var(--accent);
         }
 
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background-color: var(--accent);
-            color: white;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-
         .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
             display: flex;
             gap: 0.25rem;
-            background-color: var(--bg-color);
-            border-radius: 0.375rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
             padding: 0.25rem;
         }
 
@@ -111,33 +85,35 @@
             background: none;
             border: none;
             padding: 0.375rem 0.75rem;
-            border-radius: 0.25rem;
+            border-radius: 0.375rem;
             cursor: pointer;
             font-size: 0.875rem;
-            color: var(--text-secondary);
+            color: var(--text-light);
         }
 
         .theme-btn.active {
-            background-color: var(--surface-color);
-            color: var(--text-primary);
+            background: var(--accent);
+            color: white;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 2rem auto;
-            padding: 0 1.5rem;
+            padding: 0 1rem;
         }
 
         .form-card {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
         }
 
         .form-title {
-            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
             font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
 
         .form-group {
@@ -154,11 +130,18 @@
         .form-group textarea {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.375rem;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--bg);
+            color: var(--text);
             font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
         .rating-group {
@@ -175,8 +158,9 @@
         .rating-group label {
             cursor: pointer;
             color: #dee2e6;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             margin: 0;
+            transition: color 0.2s;
         }
 
         .rating-group label:hover,
@@ -185,74 +169,95 @@
             color: #f59e0b;
         }
 
-        button[type="submit"] {
+        .btn-submit {
             width: 100%;
             padding: 0.75rem;
-            background-color: var(--accent);
+            background: var(--accent);
             color: white;
             border: none;
-            border-radius: 0.375rem;
-            cursor: pointer;
+            border-radius: 0.5rem;
+            font-size: 1rem;
             font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
         }
 
-        .flash-message {
+        .btn-submit:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .message {
             position: fixed;
             bottom: 1rem;
             right: 1rem;
             padding: 0.75rem 1rem;
-            border-radius: 0.375rem;
+            border-radius: 0.5rem;
             color: white;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
         }
 
-        .flash-success {
-            background-color: #10b981;
+        .message-success {
+            background: var(--success);
         }
 
-        .flash-error {
-            background-color: #ef4444;
+        .message-error {
+            background: var(--error);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
+            .form-card {
+                padding: 1.5rem;
+            }
+            .theme-toggle {
+                top: 0.5rem;
+                right: 0.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo">DeepSeek</a>
-            <div class="nav-links">
-                <a href="/">Главная</a>
-                <a href="/chat">Чат</a>
-                <a href="/feedback">Отзывы</a>
-                {% if user and user.is_authenticated %}
-                    <a href="/dashboard">Профиль</a>
-                    <a href="/logout" class="btn btn-outline">Выйти</a>
-                {% else %}
-                    <a href="/login" class="btn btn-primary">Войти</a>
-                {% endif %}
-                <div class="theme-toggle">
-                    <button class="theme-btn" onclick="setTheme('light')">Светлая</button>
-                    <button class="theme-btn" onclick="setTheme('dark')">Темная</button>
-                </div>
-            </div>
+    <div class="theme-toggle">
+        <button class="theme-btn" onclick="setTheme('light')">Светлая</button>
+        <button class="theme-btn" onclick="setTheme('dark')">Темная</button>
+    </div>
+
+    <div class="header">
+        <h1>DeepSeek Chat</h1>
+        <div class="nav">
+            <a href="/">Главная</a>
+            <a href="/chat">Чат</a>
+            <a href="/feedback" style="color: var(--accent);">Отзывы</a>
         </div>
-    </nav>
+    </div>
 
     <div class="container">
         <div class="form-card">
-            <h1 class="form-title">Оставить отзыв</h1>
-            <form method="POST">
+            <h2 class="form-title">Обратная связь</h2>
+            <form id="feedbackForm">
                 <div class="form-group">
-                    <label>Имя</label>
-                    <input type="text" name="name" value="{{ user.name if user and user.is_authenticated else '' }}" required>
+                    <label>Ваше имя</label>
+                    <input type="text" id="name" required>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" value="{{ user.email if user and user.is_authenticated else '' }}" required>
+                    <input type="email" id="email" required>
                 </div>
                 <div class="form-group">
                     <label>Оценка</label>
@@ -265,10 +270,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Сообщение</label>
-                    <textarea name="message" rows="5" required placeholder="Поделитесь впечатлениями"></textarea>
+                    <label>Ваше сообщение</label>
+                    <textarea id="message" rows="5" required placeholder="Поделитесь впечатлениями..."></textarea>
                 </div>
-                <button type="submit">Отправить</button>
+                <button type="submit" class="btn-submit" id="submitBtn">Отправить отзыв</button>
             </form>
         </div>
     </div>
@@ -285,14 +290,57 @@
                 }
             });
         }
-        setTheme(localStorage.getItem('theme') || 'light');
-    </script>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for cat, msg in messages %}
-            <div class="flash-message flash-{{ cat }}">{{ msg }}</div>
-            <script>setTimeout(() => document.querySelector('.flash-message')?.remove(), 3000);</script>
-        {% endfor %}
-    {% endwith %}
+        setTheme(localStorage.getItem('theme') || 'light');
+
+        function showMessage(text, type) {
+            const msg = document.createElement('div');
+            msg.className = `message message-${type}`;
+            msg.textContent = text;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 3000);
+        }
+
+        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const rating = document.querySelector('input[name="rating"]:checked').value;
+            
+            if (!name || !email || !message) {
+                showMessage('Заполните все поля', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+            
+            try {
+                const res = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, message, rating })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showMessage(data.message || 'Спасибо за отзыв!', 'success');
+                    document.getElementById('feedbackForm').reset();
+                    document.getElementById('star5').checked = true;
+                } else {
+                    showMessage(data.error || 'Ошибка отправки', 'error');
+                }
+            } catch (err) {
+                showMessage('Ошибка соединения', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Отправить отзыв';
+            }
+        });
+    </script>
 </body>
 </html>
