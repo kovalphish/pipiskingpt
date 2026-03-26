@@ -3,208 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIPISKAgpt — Crystal AI</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Чат — PIPISKAgpt</title>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root {
-            /* Палитра Deep Ocean */
-            --bg: #0a0a0f;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #4ade80; /* Мятно-зеленый для свежести */
-            --glow: rgba(74, 222, 128, 0.15);
-            --text: #f4f4f5;
-        }
+        :root { --bg: #050508; --glass: rgba(255, 255, 255, 0.03); --accent: #4ade80; --text: #f4f4f5; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Geist', sans-serif; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px 20px; }
+        
+        .glass { background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); border-radius: 35px; }
+        
+        /* Навигация (Добавлена) */
+        nav { width: 100%; max-width: 800px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        nav a { color: var(--text); text-decoration: none; font-size: 0.85rem; opacity: 0.5; transition: 0.3s; }
+        nav a:hover { opacity: 1; color: var(--accent); }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Geist', sans-serif;
-        }
+        .chat-container { width: 100%; max-width: 800px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .messages-area { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 15px; scrollbar-width: none; }
+        
+        .msg { max-width: 85%; padding: 14px 22px; border-radius: 28px; line-height: 1.5; font-size: 0.95rem; }
+        .user { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
+        .ai { align-self: flex-start; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 4px; }
 
-        body {
-            background-color: var(--bg);
-            /* Сложный градиент для объема стекла */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(76, 29, 149, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(13, 148, 136, 0.15) 0px, transparent 50%);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
+        .input-area { display: flex; gap: 12px; padding: 10px 10px 10px 25px; background: var(--glass); border-radius: 100px; margin-bottom: 10px; }
+        
+        /* Фикс черного текста */
+        input { flex: 1; background: transparent; border: none; color: #ffffff; outline: none; font-size: 1rem; }
+        input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        .send-btn { background: var(--text); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .send-btn:disabled { opacity: 0.3; }
 
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(25px) saturate(200%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
-            border: 1px solid var(--glass-border);
-            border-radius: 40px; /* Экстремальное закругление */
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .nav {
-            width: 100%;
-            max-width: 600px;
-            padding: 12px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 60px;
-        }
-
-        .logo {
-            font-weight: 800;
-            font-size: 1rem;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--accent);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 25px;
-        }
-
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            opacity: 0.5;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover {
-            opacity: 1;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 60px 40px;
-            max-width: 700px;
-            margin-bottom: 40px;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-            line-height: 1;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            font-weight: 300;
-            color: #a1a1aa;
-            margin-bottom: 40px;
-        }
-
-        .btn {
-            background: var(--text);
-            color: var(--bg);
-            padding: 16px 35px;
-            border-radius: 100px; /* Полный овал */
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-            transform: scale(1.05);
-            box-shadow: 0 0 30px var(--glow);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            width: 100%;
-            max-width: 700px;
-        }
-
-        .card {
-            padding: 30px 20px;
-            text-align: center;
-        }
-
-        .card i {
-            color: var(--accent);
-            margin-bottom: 15px;
-            opacity: 0.8;
-        }
-
-        .card h3 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .card p {
-            font-size: 0.75rem;
-            color: #71717a;
-        }
-
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 2.5rem; }
-        }
+        .status-info { font-size: 0.75rem; color: var(--accent); margin-left: 25px; height: 20px; opacity: 0.7; }
     </style>
 </head>
 <body>
-
-    <nav class="nav glass-card">
-        <div class="logo">
-            <i data-lucide="sparkles" size="20"></i> PIPISKAgpt
-        </div>
-        <div class="nav-links">
-            <a href="/chat">Chat</a>
-            <a href="/feedback">Feed</a>
-            <a href="/dashboard"><i data-lucide="circle-user-round" size="20"></i></a>
+    <nav class="glass">
+        <div style="font-weight: 800; color: var(--accent);">PIPISKAgpt</div>
+        <div style="display: flex; gap: 20px;">
+            <a href="/">Главная</a>
+            <a href="/feedback">Отзывы</a>
         </div>
     </nav>
 
-    <div class="hero glass-card">
-        <h1>Pure. Fluid. AI.</h1>
-        <p>Минималистичный доступ к MiniMax M2.5. <br> Ничего лишнего, только интеллект.</p>
-        <a href="/chat" class="btn">
-            Запустить чат <i data-lucide="arrow-up-right" size="20"></i>
-        </a>
-    </div>
-
-    <div class="grid">
-        <div class="card glass-card">
-            <i data-lucide="zap"></i>
-            <h3>Speed</h3>
-            <p>Мгновенный отклик</p>
+    <div class="chat-container">
+        <div class="messages-area" id="chat">
+            <div class="msg ai">Привет! Я готов к работе. О чем сегодня поговорим?</div>
         </div>
-        <div class="card glass-card">
-            <i data-lucide="box"></i>
-            <h3>Context</h3>
-            <p>197K токенов</p>
-        </div>
-        <div class="card glass-card">
-            <i data-lucide="fingerprint"></i>
-            <h3>Private</h3>
-            <p>Без логов</p>
+        <div id="status" class="status-info"></div>
+        <div class="input-area glass">
+            <input type="text" id="userInput" placeholder="Напишите ваш вопрос..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                <i data-lucide="arrow-up" size="20" color="#000"></i>
+            </button>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
+        const chatDiv = document.getElementById('chat');
+        const input = document.getElementById('userInput');
+        const status = document.getElementById('status');
+        let isWaiting = false;
+
+        function addMessage(role, text) {
+            const m = document.createElement('div');
+            m.className = `msg ${role === 'user' ? 'user' : 'ai'}`;
+            m.innerText = text;
+            chatDiv.appendChild(m);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            return m;
+        }
+
+        // Эффект плавного написания текста
+        async function typeMessage(element, text) {
+            element.innerText = '';
+            for (let i = 0; i < text.length; i++) {
+                element.innerText += text.charAt(i);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+                await new Promise(r => setTimeout(r, 15)); // Скорость печати
+            }
+        }
+
+        async function sendMessage() {
+            const msg = input.value.trim();
+            if (!msg || isWaiting) return;
+
+            addMessage('user', msg);
+            input.value = '';
+            isWaiting = true;
+            status.innerText = 'Нейронка генерирует ответ...';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await res.json();
+                status.innerText = '';
+                
+                const aiMsg = addMessage('ai', ''); 
+                await typeMessage(aiMsg, data.response || 'Произошла ошибка.');
+            } catch (e) {
+                status.innerText = '';
+                addMessage('ai', 'Ошибка сети.');
+            } finally {
+                isWaiting = false;
+            }
+        }
     </script>
 </body>
 </html>
