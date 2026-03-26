@@ -48,6 +48,7 @@
             border-bottom: 1px solid var(--border);
             padding: 1rem;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .header h1 {
@@ -88,6 +89,7 @@
             border: 1px solid var(--border);
             border-radius: 0.5rem;
             padding: 0.25rem;
+            z-index: 100;
         }
 
         .theme-btn {
@@ -112,22 +114,22 @@
             max-width: 800px;
             margin: 0 auto;
             width: 100%;
-            padding: 1rem;
+            padding: 0.75rem;
             overflow: hidden;
         }
 
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 1rem;
+            padding: 0.5rem;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 0.75rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .message {
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             display: flex;
         }
 
@@ -140,29 +142,30 @@
         }
 
         .message-content {
-            max-width: 70%;
-            padding: 0.5rem 0.75rem;
+            max-width: 80%;
+            padding: 0.4rem 0.7rem;
             border-radius: 1rem;
             white-space: pre-wrap;
             font-size: 0.875rem;
-            line-height: 1.4;
+            line-height: 1.35;
         }
 
         .user .message-content {
             background: var(--user-bg);
             color: white;
-            border-bottom-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.2rem;
         }
 
         .assistant .message-content {
             background: var(--assistant-bg);
-            border-bottom-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.2rem;
         }
 
         .message-info {
-            font-size: 0.65rem;
-            margin-top: 0.2rem;
+            font-size: 0.6rem;
+            margin-top: 0.15rem;
             color: var(--text-light);
+            opacity: 0.7;
         }
 
         .user .message-info {
@@ -172,18 +175,19 @@
         .input-area {
             display: flex;
             gap: 0.75rem;
-            padding: 1rem;
+            padding: 0.75rem;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 0.75rem;
+            flex-shrink: 0;
         }
 
         .chat-input {
             flex: 1;
-            padding: 0.75rem;
+            padding: 0.6rem 0.75rem;
             border: 1px solid var(--border);
             border-radius: 0.5rem;
-            font-size: 1rem;
+            font-size: 0.875rem;
             background: var(--bg);
             color: var(--text);
             resize: none;
@@ -196,13 +200,14 @@
         }
 
         .send-btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1.25rem;
             background: var(--accent);
             color: white;
             border: none;
             border-radius: 0.5rem;
             cursor: pointer;
             font-weight: 500;
+            font-size: 0.875rem;
         }
 
         .send-btn:disabled {
@@ -217,9 +222,9 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-light);
             z-index: 100;
         }
@@ -231,16 +236,16 @@
 
         .typing-indicator {
             display: flex;
-            gap: 4px;
-            padding: 0.5rem 0.75rem;
+            gap: 3px;
+            padding: 0.4rem 0.7rem;
             background: var(--assistant-bg);
             border-radius: 1rem;
             width: fit-content;
         }
 
         .typing-dot {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: var(--text-light);
             border-radius: 50%;
             animation: typing 1.4s infinite;
@@ -248,7 +253,7 @@
 
         @keyframes typing {
             0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-6px); }
+            30% { transform: translateY(-5px); }
         }
 
         .empty {
@@ -260,7 +265,7 @@
 
         @media (max-width: 768px) {
             .message-content {
-                max-width: 85%;
+                max-width: 90%;
             }
             .clear-btn {
                 bottom: 5rem;
@@ -270,11 +275,11 @@
 </head>
 <body>
     <div class="theme-toggle">
-        <button class="theme-btn" onclick="setTheme('light')">Светлая</button>
-        <button class="theme-btn" onclick="setTheme('dark')">Темная</button>
+        <button class="theme-btn" onclick="setTheme('light')">☀️</button>
+        <button class="theme-btn" onclick="setTheme('dark')">🌙</button>
     </div>
 
-    <button class="clear-btn" onclick="clearChat()">Очистить чат</button>
+    <button class="clear-btn" onclick="clearChat()">Очистить</button>
 
     <div class="header">
         <h1>DeepSeek Chat</h1>
@@ -283,18 +288,16 @@
             <a href="/chat" style="color: var(--accent);">Чат</a>
             <a href="/feedback">Отзывы</a>
         </div>
-        <div class="model-badge">MiniMax M2.5 — лучшая бесплатная модель</div>
+        <div class="model-badge">MiniMax M2.5 + fallback</div>
     </div>
 
     <div class="chat-container">
         <div class="messages" id="messages">
-            <div class="empty">
-                💬 Напишите сообщение, чтобы начать диалог
-            </div>
+            <div class="empty">💬 Напишите сообщение</div>
         </div>
 
         <div class="input-area">
-            <textarea id="input" class="chat-input" rows="2" placeholder="Введите сообщение... (Enter - отправить)" onkeydown="handleKeyDown(event)"></textarea>
+            <textarea id="input" class="chat-input" rows="1" placeholder="Введите сообщение... (Enter - отправить)" onkeydown="handleKeyDown(event)"></textarea>
             <button id="sendBtn" class="send-btn" onclick="sendMessage()">Отправить</button>
         </div>
     </div>
@@ -348,7 +351,7 @@
         }
 
         function clearChat() {
-            messagesDiv.innerHTML = '<div class="empty">💬 Чат очищен. Напишите что-нибудь!</div>';
+            messagesDiv.innerHTML = '<div class="empty">💬 Чат очищен</div>';
         }
 
         function showTyping() {
@@ -398,7 +401,7 @@
                 addMessage('assistant', data.response || 'Ошибка');
             } catch (e) {
                 removeTyping();
-                addMessage('assistant', '❌ Ошибка соединения');
+                addMessage('assistant', '❌ Ошибка');
             } finally {
                 isWaiting = false;
                 sendBtn.disabled = false;
@@ -407,6 +410,12 @@
         }
 
         input.focus();
+        
+        // авто-растягивание поля ввода
+        input.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+        });
     </script>
 </body>
 </html>
