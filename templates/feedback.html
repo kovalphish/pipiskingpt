@@ -3,344 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обратная связь - DeepSeek</title>
+    <title>Отзывы — PIPISKAgpt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;500;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        :root { --bg: #050508; --glass: rgba(255, 255, 255, 0.03); --accent: #4ade80; --text: #f4f4f5; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Geist', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        
+        .card { width: 100%; max-width: 500px; padding: 50px; background: var(--glass); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.1); border-radius: 45px; }
+        h2 { font-size: 2rem; margin-bottom: 30px; text-align: center; letter-spacing: -1px; }
 
-        :root {
-            --bg: #f5f5f5;
-            --surface: white;
-            --text: #1a1a2e;
-            --text-light: #666;
-            --border: #e0e0e0;
-            --accent: #0d6efd;
-            --accent-hover: #0b5ed7;
-            --success: #10b981;
-            --error: #ef4444;
+        .input-group { margin-bottom: 20px; }
+        .label { display: block; margin-bottom: 8px; font-size: 0.8rem; opacity: 0.6; margin-left: 15px; }
+        
+        .field { 
+            width: 100%; padding: 18px 25px; background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; 
+            color: #fff; outline: none; transition: 0.3s; font-size: 1rem;
         }
+        .field:focus { border-color: var(--accent); background: rgba(255,255,255,0.07); }
 
-        [data-theme="dark"] {
-            --bg: #1a1a1a;
-            --surface: #2d2d2d;
-            --text: #e9ecef;
-            --text-light: #adb5bd;
-            --border: #404040;
-            --accent: #3b82f6;
-        }
+        .rating { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-direction: row-reverse; }
+        .rating input { display: none; }
+        .rating label { font-size: 30px; color: #333; cursor: pointer; transition: 0.3s; }
+        .rating input:checked ~ label, .rating label:hover, .rating label:hover ~ label { color: var(--accent); }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            transition: all 0.3s;
-        }
-
-        .header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-
-        .nav a:hover {
-            color: var(--accent);
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            gap: 0.25rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            padding: 0.25rem;
-        }
-
-        .theme-btn {
-            background: none;
-            border: none;
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-            color: var(--text-light);
-        }
-
-        .theme-btn.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .form-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 2rem;
-        }
-
-        .form-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            background: var(--bg);
-            color: var(--text);
-            font-family: inherit;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .rating-group {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-
-        .rating-group input {
-            display: none;
-        }
-
-        .rating-group label {
-            cursor: pointer;
-            color: #dee2e6;
-            font-size: 1.75rem;
-            margin: 0;
-            transition: color 0.2s;
-        }
-
-        .rating-group label:hover,
-        .rating-group label:hover ~ label,
-        .rating-group input:checked ~ label {
-            color: #f59e0b;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-submit:hover {
-            background: var(--accent-hover);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .message {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            color: white;
-            animation: slideIn 0.3s ease;
-            z-index: 1000;
-        }
-
-        .message-success {
-            background: var(--success);
-        }
-
-        .message-error {
-            background: var(--error);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .form-card {
-                padding: 1.5rem;
-            }
-            .theme-toggle {
-                top: 0.5rem;
-                right: 0.5rem;
-            }
-        }
+        .submit-btn { width: 100%; padding: 20px; border-radius: 100px; border: none; background: var(--text); font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover { background: var(--accent); transform: scale(1.02); }
+        .status { text-align: center; margin-top: 15px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <div class="theme-toggle">
-        <button class="theme-btn" onclick="setTheme('light')">Светлая</button>
-        <button class="theme-btn" onclick="setTheme('dark')">Темная</button>
-    </div>
-
-    <div class="header">
-        <h1>DeepSeek Chat</h1>
-        <div class="nav">
-            <a href="/">Главная</a>
-            <a href="/chat">Чат</a>
-            <a href="/feedback" style="color: var(--accent);">Отзывы</a>
+    <div class="card">
+        <h2>Оставить отзыв</h2>
+        <div class="input-group">
+            <span class="label">Имя</span>
+            <input type="text" id="name" class="field" placeholder="Как вас зовут?">
         </div>
-    </div>
+        <div class="input-group">
+            <span class="label">Сообщение</span>
+            <textarea id="message" class="field" rows="4" placeholder="Ваши впечатления..."></textarea>
+        </div>
+        
+        <div class="rating">
+            <input type="radio" name="star" id="s5" value="5"><label for="s5">★</label>
+            <input type="radio" name="star" id="s4" value="4"><label for="s4">★</label>
+            <input type="radio" name="star" id="s3" value="3"><label for="s3">★</label>
+            <input type="radio" name="star" id="s2" value="2"><label for="s2">★</label>
+            <input type="radio" name="star" id="s1" value="1"><label for="s1">★</label>
+        </div>
 
-    <div class="container">
-        <div class="form-card">
-            <h2 class="form-title">Обратная связь</h2>
-            <form id="feedbackForm">
-                <div class="form-group">
-                    <label>Ваше имя</label>
-                    <input type="text" id="name" required>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label>Оценка</label>
-                    <div class="rating-group">
-                        <input type="radio" name="rating" value="5" id="star5" checked><label for="star5">★</label>
-                        <input type="radio" name="rating" value="4" id="star4"><label for="star4">★</label>
-                        <input type="radio" name="rating" value="3" id="star3"><label for="star3">★</label>
-                        <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
-                        <input type="radio" name="rating" value="1" id="star1"><label for="star1">★</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Ваше сообщение</label>
-                    <textarea id="message" rows="5" required placeholder="Поделитесь впечатлениями..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit" id="submitBtn">Отправить отзыв</button>
-            </form>
+        <button class="submit-btn" onclick="sendFeedback()">Отправить</button>
+        <div id="status" class="status"></div>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" style="color: #555; text-decoration: none; font-size: 0.8rem;">← Назад</a>
         </div>
     </div>
 
     <script>
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            const btns = document.querySelectorAll('.theme-btn');
-            btns.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.toLowerCase() === theme) {
-                    btn.classList.add('active');
-                }
-            });
-        }
+        async function sendFeedback() {
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+            const rating = document.querySelector('input[name="star"]:checked')?.value || 5;
+            const status = document.getElementById('status');
 
-        setTheme(localStorage.getItem('theme') || 'light');
+            if(!name || !message) { status.innerText = 'Заполните поля'; return; }
 
-        function showMessage(text, type) {
-            const msg = document.createElement('div');
-            msg.className = `message message-${type}`;
-            msg.textContent = text;
-            document.body.appendChild(msg);
-            setTimeout(() => msg.remove(), 3000);
-        }
-
-        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
-            const rating = document.querySelector('input[name="rating"]:checked').value;
-            
-            if (!name || !email || !message) {
-                showMessage('Заполните все поля', 'error');
-                return;
-            }
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Отправка...';
-            
             try {
                 const res = await fetch('/api/feedback', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, message, rating })
+                    body: JSON.stringify({ name, message, rating })
                 });
-                
-                const data = await res.json();
-                
-                if (res.ok) {
-                    showMessage(data.message || 'Спасибо за отзыв!', 'success');
-                    document.getElementById('feedbackForm').reset();
-                    document.getElementById('star5').checked = true;
-                } else {
-                    showMessage(data.error || 'Ошибка отправки', 'error');
+                if(res.ok) {
+                    status.style.color = '#4ade80';
+                    status.innerText = 'Отзыв отправлен!';
                 }
-            } catch (err) {
-                showMessage('Ошибка соединения', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Отправить отзыв';
-            }
-        });
+            } catch (e) { status.innerText = 'Ошибка отправки'; }
+        }
     </script>
 </body>
 </html>
